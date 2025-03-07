@@ -55,7 +55,7 @@ int main(int argc, char* agv[])
 		renderenemiesbullet(b2, renderer);
 		checkcollision1(b1,e,p);
 		checkcollision2(b2, p);
-		checkcollision3(e)
+		checkcollision3(e);
 		SDL_RenderPresent(renderer);
 	}
 	SDL_DestroyWindow(window);
