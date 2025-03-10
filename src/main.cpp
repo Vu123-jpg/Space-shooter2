@@ -13,7 +13,7 @@ int main(int argc, char* agv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
-	TTF_Font* font = TTF_OpenFont("arial.ttf", 24);
+	TTF_Font* font = TTF_OpenFont("asset/arial.ttf", 24);
 	SDL_Window* window = SDL_CreateWindow("Space shooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_Color textColor = { 255, 255, 255, 255 };
