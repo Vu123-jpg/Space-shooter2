@@ -76,13 +76,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ADMIN\source\repos\Space shooter2\include;C:\SDL\SDL2-2.30.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SDLttf\SDL2_ttf-2.20.1\include;C:\SDLimage1\SDL2_image-2.8.5\include;C:\Users\ADMIN\source\repos\Space shooter2\include;C:\SDL\SDL2-2.30.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SDL\SDL2-2.30.0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SDLttf\SDL2_ttf-2.20.1\lib\x86;C:\SDLimage1\SDL2_image-2.8.5\lib\x86;C:\SDL\SDL2-2.30.0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="barHP.cpp" />
     <ClCompile Include="src\bullets.cpp" />
     <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="src\thoatgame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\barHP.h" />
     <ClInclude Include="include\bullets.h" />
     <ClInclude Include="include\enemies.h" />
     <ClInclude Include="include\player.h" />

@@ -30,6 +30,9 @@
     <ClCompile Include="src\thoatgame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="barHP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\bullets.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\thoatgame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\barHP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

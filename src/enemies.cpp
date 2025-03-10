@@ -4,7 +4,7 @@
 #include<cstdlib>
 using namespace std;
 void spawnenemy(vector<enemy>& e) {
-	int maxEnemies = 15;
+	int maxEnemies = 10;
 	int cols = 50;
 	int colwidth = 800 / cols;
 	int startY = 50;

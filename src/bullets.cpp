@@ -1,9 +1,11 @@
 #include<iostream>
 #include<vector>
 #include<SDL.h>
+#include<cmath>
 #include"bullets.h"
 #include"player.h"
 #include"enemies.h"
+#include"barHP.h"
 #include<ctime>
 void createplayerbullet(vector<bullet>& b1, player& p)
 {
@@ -40,7 +42,6 @@ void updateplayerbullet(vector<bullet>& b1)
 {
 	for (int i =b1.size()-1;i >=0;i--)
 	{
-		b1[i].rect.x += b1[i].speed / 10;
 		b1[i].rect.y -= b1[i].speed;
 		if (b1[i].rect.y < 0)
 		{
@@ -52,7 +53,7 @@ void updateenemiesbullet(vector<bullet>& b2)
 {
 	for (int i = b2.size()-1;i >=0;i--)
 	{
-		b2[i].posY += b2[i].speed / 10;
+		b2[i].posY += b2[i].speed / 5;
 		b2[i].rect.y = (int)b2[i].posY;
 		if (b2[i].rect.y >600)
 		{
@@ -78,6 +79,7 @@ void renderenemiesbullet(vector<bullet>& b2, SDL_Renderer* renderer)
 		SDL_RenderFillRect(renderer, &b2[i].rect);
 	}
 }
+
 void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 {
 	for (int i = b1.size()-1;i >=0;i--)
@@ -87,7 +89,10 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 			if (SDL_HasIntersection(&b1[i].rect, &e[j].rect))
 			{
 				p.score += 10;
+				p.combo++;
 				cout << "diem" << " " << p.score;
+				cout << endl;
+				cout << "combo" << " " << p.combo;
 				cout << endl;
 				b1.erase(b1.begin() + i);
 				e.erase(e.begin() + j);
@@ -97,7 +102,7 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 		}
 	}
 }
-void checkcollision2(vector<bullet>& b2, player& p)
+void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP)
 {
 	for (int i =b2.size()-1;i>=0;i--)
 	{
@@ -105,8 +110,15 @@ void checkcollision2(vector<bullet>& b2, player& p)
 		{
 			b2.erase(b2.begin() + i);
 			p.health -= 100;
-			cout << "mau hien tai" << p.health;
+			updatebarhp(HP, p);
+			cout << "mau hien tai" <<" "<< p.health;
 			cout << endl;
 		}
 	}
 }
+
+
+
+
+
+

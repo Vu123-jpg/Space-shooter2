@@ -5,6 +5,7 @@
 #include<SDL.h>
 #include"player.h"
 #include"enemies.h"
+#include"barHP.h"
 using namespace std;
 struct bullet
 {
@@ -19,6 +20,6 @@ void updateenemiesbullet(vector<bullet>& b2);
 void renderplayerbullet(vector<bullet>&b1, SDL_Renderer* renderer);
 void renderenemiesbullet(vector<bullet>&b2, SDL_Renderer* renderer);
 void checkcollision1(vector<bullet>& b1, vector<enemy>& e,player&p);
-void checkcollision2(vector<bullet>& b2, player& p);
+void checkcollision2(vector<bullet>& b2, player& p, vector<hp>& HP);
 #endif
 

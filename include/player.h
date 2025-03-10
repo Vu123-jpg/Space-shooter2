@@ -9,6 +9,7 @@ struct player
 	int speed;
 	int score;
 	int health;
+	int combo = 0;
 };
 void createplayer(player& p);
 void updateplayer(player& p);
