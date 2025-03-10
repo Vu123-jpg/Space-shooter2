@@ -5,7 +5,6 @@
 #include"player.h"
 #include"enemies.h"
 #include<ctime>
-bool gameover = false;
 void createplayerbullet(vector<bullet>& b1, player& p)
 {
 	bullet temp;
@@ -88,6 +87,8 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 			if (SDL_HasIntersection(&b1[i].rect, &e[j].rect))
 			{
 				p.score += 10;
+				cout << "diem" << " " << p.score;
+				cout << endl;
 				b1.erase(b1.begin() + i);
 				e.erase(e.begin() + j);
 				break;
@@ -103,8 +104,9 @@ void checkcollision2(vector<bullet>& b2, player& p)
 		if (SDL_HasIntersection(&b2[i].rect, &p.rect))
 		{
 			b2.erase(b2.begin() + i);
-			p.health -= 10;
+			p.health -= 100;
+			cout << "mau hien tai" << p.health;
+			cout << endl;
 		}
-		if (p.health == 0) gameover = true;
 	}
 }

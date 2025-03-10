@@ -4,6 +4,7 @@
 #include"player.h"
 #include"enemies.h"
 #include"bullets.h"
+#include"thoatgame.h"
 using namespace std;
 int main(int argc, char* agv[])
 {
@@ -11,6 +12,7 @@ int main(int argc, char* agv[])
 	SDL_Window* window = SDL_CreateWindow("Space shooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	bool running = true;
+	bool gameover = false;
 	SDL_Event event;
 	player p;
 	vector<enemy>e;
@@ -56,6 +58,22 @@ int main(int argc, char* agv[])
 		checkcollision1(b1,e,p);
 		checkcollision2(b2, p);
 		checkcollision3(e);
+		if (p.health == 0)
+		{
+			bool restart = false;
+			thoatgame(renderer, restart);
+			if (restart)
+			{
+				p.health = 1000;
+				p.score = 0;
+			}
+			else
+			{
+				running = false;
+
+			}
+		}
+
 		SDL_RenderPresent(renderer);
 	}
 	SDL_DestroyWindow(window);
