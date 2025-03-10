@@ -130,7 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="barHP.cpp" />
+    <ClCompile Include="src\barHP.cpp" />
     <ClCompile Include="src\bullets.cpp" />
     <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\main.cpp" />

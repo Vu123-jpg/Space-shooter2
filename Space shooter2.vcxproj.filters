@@ -30,7 +30,7 @@
     <ClCompile Include="src\thoatgame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="barHP.cpp">
+    <ClCompile Include="src\barHP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

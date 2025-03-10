@@ -17,7 +17,6 @@ int main(int argc, char* agv[])
 	SDL_Window* window = SDL_CreateWindow("Space shooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_Color textColor = { 255, 255, 255, 255 };
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, "SCORE", textColor);
 	bool running = true;
 	bool gameover = false;
 	SDL_Event event;
