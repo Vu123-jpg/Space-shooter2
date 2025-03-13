@@ -36,6 +36,7 @@ void thoatgame(SDL_Renderer* renderer, bool& restart) {
 }
 void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p,vector<hp>&HP)
 {
+	p.combo = 0;
 	p.score = 0;
 	p.health = 1000;
 	p.rect.x = 400;
@@ -63,7 +64,7 @@ void renderscore(SDL_Renderer* renderer,TTF_Font*font, player& p) {
 void rendergameover(SDL_Renderer* renderer, TTF_Font* font)
 {
 	SDL_Color textColor = { 255,255,255,255 };
-	string gameovertext = "Ban da cook\nP de choi lai\n X de thoat";
+	string gameovertext = "Game over!\nP de choi lai\n X de thoat";
 	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, gameovertext.c_str(), textColor,200);
 
 	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);

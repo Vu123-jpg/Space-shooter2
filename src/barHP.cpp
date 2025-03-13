@@ -2,6 +2,7 @@
 #include <vector>
 #include <SDL.h>
 #include "barHP.h"
+#include"bullets.h"
 using namespace std;
 
 void createbarhp(vector<hp>& HP)
@@ -22,6 +23,7 @@ void createbarhp(vector<hp>& HP)
 void updatebarhp(vector<hp>& HP, player& p)
 {
         HP.pop_back(); 
+     
 }
 
 void renderbarhp(SDL_Renderer* renderer, vector<hp>& HP)

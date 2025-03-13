@@ -2,16 +2,25 @@
 #include<iostream>
 #include"enemies.h"
 #include<cstdlib>
+#include<unordered_set>
 using namespace std;
+int maxEnemies = 15;
+int cols = 10;
+int colwidth = 800 / cols;
 void spawnenemy(vector<enemy>& e) {
-	int maxEnemies = 10;
-	int cols = 50;
-	int colwidth = 800 / cols;
-	int startY = 50;
-	while (e.size() < maxEnemies)
+	unordered_set<int>existcols;
+	int startY = 50; 
+	for (int i = 0;i < e.size();i++)
 	{
+		int cole = e[i].rect.x / colwidth;
+			existcols.insert(cole);
+	}
+	while (e.size() < maxEnemies-5)
+	{
+		int randcols = rand() % cols;
+		if (existcols.count(randcols)) continue;
 		enemy tmp;
-		tmp.rect.x = (rand() % cols) * colwidth + colwidth / 4;
+		tmp.rect.x = randcols * colwidth + colwidth / 4;
 		tmp.rect.y = startY - (rand() % 152);
 		tmp.poseY = tmp.rect.y;
 		tmp.rect.w = 30;
@@ -42,6 +51,10 @@ void updateenemies(vector<enemy>& e)
 			e[i].rect.x = rand() % 800;
 			e[i].distance = 0;
 		}
+		if (e[i].rect.x + e[i].rect.w > 800)
+		{
+			e[i].rect.x = 700;
+		}
 	}
 }
 void renderenemies(vector<enemy>& e, SDL_Renderer* renderer)
@@ -54,16 +67,16 @@ void renderenemies(vector<enemy>& e, SDL_Renderer* renderer)
 		SDL_RenderFillRect(renderer, &e[i].rect);
 	}
 }
-void checkcollision3(vector<enemy>&e)
+void checkcollisionenemy(vector<enemy>& e)
 {
 	for (int i = e.size() - 1;i > 0;i--)
 	{
-		for (int j = i-1 ;j >= 0;j--)
+		for (int j = i - 1;j >= 0;j--)
 		{
-			if (SDL_HasIntersection(&e[i].rect,&e[j].rect))
+			if (SDL_HasIntersection(&e[i].rect, &e[j].rect))
 			{
 				e.erase(e.begin()+i);
-				return;
+				break;
 			}
 		}
 	}

@@ -79,6 +79,52 @@ void renderenemiesbullet(vector<bullet>& b2, SDL_Renderer* renderer)
 		SDL_RenderFillRect(renderer, &b2[i].rect);
 	}
 }
+void createnuclearbomb(vector<bullet>& b3, player& p)
+{
+	bullet b;
+	b.rect.x = p.rect.x + p.rect.w / 2;
+	b.rect.y = p.rect.y;
+	b.posY = b.rect.y;
+	b.rect.w = 40;
+	b.rect.h = 40;
+	b.speed = 1;
+	b3.push_back(b);
+	cout << b3.size() << " " << "bom";
+}
+void updatenuclearbomb(vector<bullet>& b3)
+{
+	for (int i = b3.size() - 1;i >= 0;i--)
+	{
+		b3[i].posY -= b3[i].speed / 10;
+		b3[i].rect.y = (int)b3[i].posY;
+		if (b3[i].rect.y < 0)
+		{
+			b3.erase(b3.begin() + i);
+		}
+	}
+}
+void rendernuclearbomb(vector<bullet>&b3,SDL_Renderer*renderer)
+{
+	int n = b3.size();
+	for (int i = 0;i <n;i++)
+	{
+		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 0);
+		SDL_RenderFillRect(renderer, &b3[i].rect);
+	}
+}
+void booooom(vector<bullet>& b3, vector<enemy>& e,player&p)
+{
+	for (int i = b3.size()-1;i >= 0;i--)
+	{
+		if (b3[i].rect.y <= 100)
+		{
+			b3.erase(b3.begin() + i);
+			e.clear();
+			p.score += 100;
+		}
+	}
+}
+
 
 void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 {
@@ -88,15 +134,17 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 		{
 			if (SDL_HasIntersection(&b1[i].rect, &e[j].rect))
 			{
-				p.score += 10;
-				p.combo++;
-				cout << "diem" << " " << p.score;
-				cout << endl;
-				cout << "combo" << " " << p.combo;
-				cout << endl;
-				b1.erase(b1.begin() + i);
-				e.erase(e.begin() + j);
-				break;
+			
+					p.score += 10;
+					p.combo++;
+					cout << "diem" << " " << p.score;
+					cout << endl;
+					cout << "combo" << " " << p.combo;
+					cout << endl;
+		     		b1.erase(b1.begin() + i);
+					e.erase(e.begin() + j);
+					break;
+	
 			}
 
 		}

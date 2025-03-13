@@ -51,6 +51,14 @@ int main(int argc, char* agv[])
 				}
 				
 			}
+			if (p.combo >= 20)
+			{
+				if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r)
+				{
+					createnuclearbomb(b3, p);
+					p.combo = 0;
+				}
+			}
 			
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -63,12 +71,15 @@ int main(int argc, char* agv[])
 		createenemiesbullet(b2, e);
 		updateplayerbullet(b1);
 		updateenemiesbullet(b2);
+		updatenuclearbomb(b3);
 		renderplayerbullet(b1, renderer);
 		renderenemiesbullet(b2, renderer);
+		rendernuclearbomb(b3, renderer);
 		checkcollision1(b1,e,p);
 		checkcollision2(b2, p, HP);
+		booooom(b3, e, p);
+		checkcollisionenemy(e);
 		renderbarhp(renderer, HP);
-		checkcollision3(e);
 		if (p.health == 0)
 		{
 			bool restart = false;
@@ -89,6 +100,7 @@ int main(int argc, char* agv[])
 		renderscore(renderer, font, p);
 		SDL_RenderPresent(renderer);
 	}
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();

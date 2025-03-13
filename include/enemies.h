@@ -16,5 +16,6 @@ struct enemy
 void spawnenemy(vector<enemy>& e);
 void updateenemies(vector<enemy>& e);
 void renderenemies(vector<enemy>& e, SDL_Renderer* renderer);
-void checkcollision3(vector<enemy>&e);
+void checkcollisionenemy(vector<enemy>& e);
+
 #endif
