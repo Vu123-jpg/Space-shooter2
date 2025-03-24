@@ -3,6 +3,7 @@
 #include<iostream>
 #include<vector>
 #include<SDL.h>
+#include<SDL_image.h>
 using namespace std;
 struct enemy
 {
@@ -15,7 +16,7 @@ struct enemy
 };
 void spawnenemy(vector<enemy>& e);
 void updateenemies(vector<enemy>& e);
-void renderenemies(vector<enemy>& e, SDL_Renderer* renderer);
+void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer, SDL_Texture* enemyTexture);
 void checkcollisionenemy(vector<enemy>& e);
 
 #endif

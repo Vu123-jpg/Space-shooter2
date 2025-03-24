@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include<SDL.h>
+#include<vector>
 #include<iostream>
 
 struct player
@@ -13,7 +14,7 @@ struct player
 };
 void createplayer(player& p);
 void updateplayer(player& p);
-/*void controlplayer(player& p, SDL_Event& e);*/
-void renderplayer(player& p, SDL_Renderer* renderer);
+void controlplayer(player& p, SDL_Event& e);
+void renderplayer(player& p, SDL_Renderer* renderer,SDL_Texture*planetexture);
 #endif 
 

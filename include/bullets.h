@@ -14,10 +14,10 @@ struct bullet
 	float posY;
 };
 void createplayerbullet(vector<bullet>& b1, player& p);
-void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e);
+void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e,player&p);
 void updateplayerbullet(vector<bullet>& b1);
 void updateenemiesbullet(vector<bullet>& b2);
-void renderplayerbullet(vector<bullet>&b1, SDL_Renderer* renderer);
+void renderplayerbullet(vector<bullet>& b1, SDL_Renderer* renderer, SDL_Texture* bulletsTexture);
 void renderenemiesbullet(vector<bullet>&b2, SDL_Renderer* renderer);
 void createnuclearbomb(vector<bullet>& b3, player& p);
 void updatenuclearbomb(vector<bullet>& b3);

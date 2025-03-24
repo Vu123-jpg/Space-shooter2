@@ -1,5 +1,6 @@
 #include<iostream>
 #include<SDL.h>
+#include<SDL_image.h>
 #include"player.h"
 #include"bullets.h"
 #include<vector>
@@ -19,10 +20,12 @@ void updateplayer(player& p)
 {
 	if (p.rect.x < 0) p.rect.x = 0;
 	if (p.rect.x + p.rect.w > 800) p.rect.x = 800 - p.rect.w;
+	if (p.rect.y <0) p.rect.y = 0;
+	if (p.rect.y + p.rect.h > 600) p.rect.y = 600 - p.rect.h;
 }
-/*void controlplayer(player& p, SDL_Event& e)
+void controlplayer(player& p, SDL_Event& e)
 {
-	if (e.type == SDL_KEYDOWN)
+	if (e.type = SDL_KEYDOWN)
 	{
 		switch (e.key.keysym.sym)
 		{
@@ -32,12 +35,16 @@ void updateplayer(player& p)
 		case SDLK_LEFT:
 			p.rect.x -= p.speed;
 			break;
+		case SDLK_UP:
+			p.rect.y -= p.speed;
+			break;
+		case SDLK_DOWN:
+			p.rect.y += p.speed;
 		}
-
 	}
-}*/
-void renderplayer(player& p, SDL_Renderer* renderer)
+}
+void renderplayer(player& p, SDL_Renderer* renderer,SDL_Texture*planeTexture)
 {
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderFillRect(renderer, &p.rect);
+		SDL_RenderCopy(renderer, planeTexture, nullptr, &p.rect);
+		
 }

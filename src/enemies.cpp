@@ -1,10 +1,11 @@
 #include<SDL.h>
+#include<SDL_image.h>
 #include<iostream>
 #include"enemies.h"
 #include<cstdlib>
 #include<unordered_set>
 using namespace std;
-int maxEnemies = 15;
+int maxEnemies = 10;
 int cols = 10;
 int colwidth = 800 / cols;
 void spawnenemy(vector<enemy>& e) {
@@ -15,7 +16,7 @@ void spawnenemy(vector<enemy>& e) {
 		int cole = e[i].rect.x / colwidth;
 			existcols.insert(cole);
 	}
-	while (e.size() < maxEnemies-5)
+	while (e.size() < maxEnemies)
 	{
 		int randcols = rand() % cols;
 		if (existcols.count(randcols)) continue;
@@ -57,16 +58,16 @@ void updateenemies(vector<enemy>& e)
 		}
 	}
 }
-void renderenemies(vector<enemy>& e, SDL_Renderer* renderer)
-{
+
+void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer, SDL_Texture* enemyTexture) {
 	if (e.empty()) return;
-	int n = e.size();
-	for (int i = 0; i < n;i++)
-	{
-		SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0);
-		SDL_RenderFillRect(renderer, &e[i].rect);
+
+	for (int i = 0;i<(int)e.size();i++) {
+		SDL_RenderCopy(renderer, enemyTexture, nullptr, &e[i].rect);
 	}
 }
+
+
 void checkcollisionenemy(vector<enemy>& e)
 {
 	for (int i = e.size() - 1;i > 0;i--)

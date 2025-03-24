@@ -9,14 +9,22 @@
 #include<SDL_image.h>
 #include<SDL_ttf.h>
 using namespace std;
+
 int main(int argc, char* agv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
+	IMG_Init(IMG_INIT_PNG); 
 	TTF_Font* font = TTF_OpenFont("asset/arial.ttf", 24);
+	SDL_Color textColor = { 255, 255, 255, 255 };
+
 	SDL_Window* window = SDL_CreateWindow("Space shooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_Color textColor = { 255, 255, 255, 255 };
+
+	SDL_Texture* planeTexture = IMG_LoadTexture(renderer, "asset/plane.png");
+	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer,"asset/enemies.jpg");
+	SDL_Texture* backgroundTexture = IMG_LoadTexture(renderer, "asset/background.jpg");
+	SDL_Texture* bulletsTexture = IMG_LoadTexture(renderer, "asset/bullets.png");
 	bool running = true;
 	bool gameover = false;
 	SDL_Event event;
@@ -37,19 +45,10 @@ int main(int argc, char* agv[])
 			{
 				running = false;
 			}
-			if (event.type == SDL_KEYDOWN) {
-				switch (event.key.keysym.sym) {
-				case SDLK_RIGHT:
-					p.rect.x += p.speed;
-					break;
-				case SDLK_LEFT:
-					p.rect.x -= p.speed;
-					break;
-				case SDLK_SPACE:
-					createplayerbullet(b1, p);
-					break;
-				}
-				
+			controlplayer(p, event);
+			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+			{
+				createplayerbullet(b1, p);
 			}
 			if (p.combo >= 20)
 			{
@@ -63,16 +62,17 @@ int main(int argc, char* agv[])
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
+		renderBackground(renderer, backgroundTexture);
 		updateplayer(p);
-		renderplayer(p, renderer);
+		renderplayer(p, renderer,planeTexture);
 		spawnenemy(e);
 		updateenemies(e);
-		renderenemies(e, renderer);
-		createenemiesbullet(b2, e);
+		renderEnemies(e, renderer,enemyTexture);
+		createenemiesbullet(b2, e,p);
 		updateplayerbullet(b1);
 		updateenemiesbullet(b2);
 		updatenuclearbomb(b3);
-		renderplayerbullet(b1, renderer);
+		renderplayerbullet(b1, renderer, bulletsTexture);
 		renderenemiesbullet(b2, renderer);
 		rendernuclearbomb(b3, renderer);
 		checkcollision1(b1,e,p);
@@ -88,7 +88,7 @@ int main(int argc, char* agv[])
 			thoatgame(renderer, restart);
 			if (restart)
 			{
-				resetgame(b1, b2, e, p, HP);
+				resetgame(b1, b2, e, p, HP, b3);
 
 			}
 			else
@@ -99,10 +99,16 @@ int main(int argc, char* agv[])
 		}
 		renderscore(renderer, font, p);
 		SDL_RenderPresent(renderer);
+	//	SDL_Delay(16);
 	}
+
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	SDL_DestroyTexture(planeTexture);
+	SDL_DestroyTexture(enemyTexture);
+	SDL_DestroyTexture(backgroundTexture);
+	SDL_DestroyTexture(bulletsTexture);
 	SDL_Quit();
 	TTF_CloseFont(font);
 	TTF_Quit();

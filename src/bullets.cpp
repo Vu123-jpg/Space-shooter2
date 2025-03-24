@@ -12,12 +12,13 @@ void createplayerbullet(vector<bullet>& b1, player& p)
 	bullet temp;
 	temp.rect.x = p.rect.x + p.rect.w / 2;
 	temp.rect.y = p.rect.y;
-	temp.rect.w = 10;
-	temp.rect.h = 10;
-	temp.speed = 1;
+	temp.posY = temp.rect.y;
+	temp.rect.w = 20;
+	temp.rect.h = 20;
+	temp.speed = 1.0;
 	b1.push_back(temp);
 }
-void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e)
+void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e,player&p)
 {
 	int n = e.size();
 	Uint32 curenttime = SDL_GetTicks();
@@ -42,7 +43,8 @@ void updateplayerbullet(vector<bullet>& b1)
 {
 	for (int i =b1.size()-1;i >=0;i--)
 	{
-		b1[i].rect.y -= b1[i].speed;
+		b1[i].posY -= b1[i].speed / 2;
+		b1[i].rect.y = (int)b1[i].posY;
 		if (b1[i].rect.y < 0)
 		{
 			b1.erase(b1.begin() + i);
@@ -61,13 +63,12 @@ void updateenemiesbullet(vector<bullet>& b2)
 		}
 	}
 }
-void renderplayerbullet(vector<bullet>& b1, SDL_Renderer* renderer)
+void renderplayerbullet(vector<bullet>& b1, SDL_Renderer* renderer,SDL_Texture*bulletsTexture)
 {
 	int m = b1.size();
 	for (int i = 0;i < m;i++)
 	{
-		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 0);
-		SDL_RenderFillRect(renderer, &b1[i].rect);
+		SDL_RenderCopy(renderer, bulletsTexture, nullptr, &b1[i].rect);
 	}
 }
 void renderenemiesbullet(vector<bullet>& b2, SDL_Renderer* renderer)

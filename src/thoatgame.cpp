@@ -34,7 +34,7 @@ void thoatgame(SDL_Renderer* renderer, bool& restart) {
 		}
 	}
 }
-void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p,vector<hp>&HP)
+void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p,vector<hp>&HP,vector<bullet>&b3)
 {
 	p.combo = 0;
 	p.score = 0;
@@ -44,6 +44,7 @@ void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p
 	e.clear();
 	b1.clear();
 	b2.clear();
+	b3.clear();
 	createbarhp(HP);
 }
 void renderscore(SDL_Renderer* renderer,TTF_Font*font, player& p) {
@@ -77,4 +78,7 @@ void rendergameover(SDL_Renderer* renderer, TTF_Font* font)
 	SDL_DestroyTexture(textTexture);
 
 }
-
+void renderBackground( SDL_Renderer* renderer, SDL_Texture* backgroundTexture) {
+	SDL_Rect bgRect = { 0, 0, 800, 600 };
+	SDL_RenderCopy(renderer,backgroundTexture, NULL, &bgRect);
+}
