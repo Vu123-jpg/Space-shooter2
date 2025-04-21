@@ -6,7 +6,7 @@
 #include<unordered_set>
 using namespace std;
 int maxEnemies = 10;
-int cols = 10;
+int cols = 10; // cot de luu ke dich 
 int colwidth = 800 / cols;
 void spawnenemy(vector<enemy>& e) {
 	unordered_set<int>existcols;
@@ -26,7 +26,7 @@ void spawnenemy(vector<enemy>& e) {
 		tmp.poseY = tmp.rect.y;
 		tmp.rect.w = 30;
 		tmp.rect.h = 30;
-		tmp.speed = 1;
+		tmp.speed = 20;
 		tmp.distance = 0;
 		tmp.posdisY = tmp.distance;
 		tmp.shoottime = SDL_GetTicks() + (rand() % 2000 + 1000);

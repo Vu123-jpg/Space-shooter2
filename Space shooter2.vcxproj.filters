@@ -27,7 +27,7 @@
     <ClCompile Include="src\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\thoatgame.cpp">
+    <ClCompile Include="src\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\barHP.cpp">
@@ -44,7 +44,7 @@
     <ClInclude Include="include\player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\thoatgame.h">
+    <ClInclude Include="include\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\barHP.h">

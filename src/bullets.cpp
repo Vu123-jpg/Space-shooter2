@@ -2,11 +2,13 @@
 #include<vector>
 #include<SDL.h>
 #include<cmath>
+#include"game.h"
 #include"bullets.h"
 #include"player.h"
 #include"enemies.h"
 #include"barHP.h"
 #include<ctime>
+bool restart;
 void createplayerbullet(vector<bullet>& b1, player& p)
 {
 	bullet temp;
@@ -15,7 +17,7 @@ void createplayerbullet(vector<bullet>& b1, player& p)
 	temp.posY = temp.rect.y;
 	temp.rect.w = 20;
 	temp.rect.h = 20;
-	temp.speed = 1.0;
+	temp.speed = 20.0;
 	b1.push_back(temp);
 }
 void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e,player&p)
@@ -32,7 +34,7 @@ void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e,player&p)
 			tmp.posY = tmp.rect.y;
 			tmp.rect.w = 10;
 			tmp.rect.h = 10;
-			tmp.speed = 1.0;
+			tmp.speed = 15.0;
 			b2.push_back(tmp);
 			e[i].shoottime = curenttime + (rand() % 2000 + 1000);
 		}
@@ -88,9 +90,8 @@ void createnuclearbomb(vector<bullet>& b3, player& p)
 	b.posY = b.rect.y;
 	b.rect.w = 40;
 	b.rect.h = 40;
-	b.speed = 1;
+	b.speed = 20;
 	b3.push_back(b);
-	cout << b3.size() << " " << "bom";
 }
 void updatenuclearbomb(vector<bullet>& b3)
 {
@@ -113,7 +114,7 @@ void rendernuclearbomb(vector<bullet>&b3,SDL_Renderer*renderer)
 		SDL_RenderFillRect(renderer, &b3[i].rect);
 	}
 }
-void booooom(vector<bullet>& b3, vector<enemy>& e,player&p)
+void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e,player&p,vector<bullet>&b2)
 {
 	for (int i = b3.size()-1;i >= 0;i--)
 	{
@@ -121,27 +122,23 @@ void booooom(vector<bullet>& b3, vector<enemy>& e,player&p)
 		{
 			b3.erase(b3.begin() + i);
 			e.clear();
+			b2.clear();
 			p.score += 100;
 		}
 	}
 }
-
-
-void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
+void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&cb)
 {
-	for (int i = b1.size()-1;i >=0;i--)
+	for(int i=b1.size()-1;i>=0;i--)
 	{
-		for (int j = e.size()-1;j>=0;j--)
+		for(int j=e.size()-1;j>=0;j--)
 		{
 			if (SDL_HasIntersection(&b1[i].rect, &e[j].rect))
 			{
-			
-					p.score += 10;
+
+				    p.score += 10;
 					p.combo++;
-					cout << "diem" << " " << p.score;
-					cout << endl;
-					cout << "combo" << " " << p.combo;
-					cout << endl;
+					createbarcombo(cb, p);
 		     		b1.erase(b1.begin() + i);
 					e.erase(e.begin() + j);
 					break;
@@ -151,7 +148,7 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p)
 		}
 	}
 }
-void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP)
+void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP,vector<combo>&cb)
 {
 	for (int i =b2.size()-1;i>=0;i--)
 	{
@@ -159,9 +156,9 @@ void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP)
 		{
 			b2.erase(b2.begin() + i);
 			p.health -= 100;
+			p.combo = 0;
+			createbarcombo(cb, p);
 			updatebarhp(HP, p);
-			cout << "mau hien tai" <<" "<< p.health;
-			cout << endl;
 		}
 	}
 }

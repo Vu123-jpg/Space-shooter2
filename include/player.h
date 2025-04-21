@@ -9,6 +9,7 @@ struct player
 	SDL_Rect rect;
 	int speed;
 	int score;
+	int highscore = 0;
 	int health;
 	int combo = 0;
 };

@@ -22,8 +22,8 @@ void renderenemiesbullet(vector<bullet>&b2, SDL_Renderer* renderer);
 void createnuclearbomb(vector<bullet>& b3, player& p);
 void updatenuclearbomb(vector<bullet>& b3);
 void rendernuclearbomb(vector<bullet>& b3, SDL_Renderer* renderer);
-void booooom(vector<bullet>& b3, vector<enemy>& e, player& p);
-void checkcollision1(vector<bullet>& b1, vector<enemy>& e,player&p);
-void checkcollision2(vector<bullet>& b2, player& p, vector<hp>& HP);
+void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e, player& p,vector<bullet>&b2);
+void checkcollision1(vector<bullet>& b1, vector<enemy>& e, player& p, vector<combo>& cb);//va cham dan nguoi choi va ke dich
+void checkcollision2(vector<bullet>& b2, player& p, vector<hp>& HP, vector<combo>& cb);//va cham dan ke dich va nguoi choi
 #endif
 

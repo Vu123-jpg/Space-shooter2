@@ -135,14 +135,14 @@
     <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\player.cpp" />
-    <ClCompile Include="src\thoatgame.cpp" />
+    <ClCompile Include="src\game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\barHP.h" />
     <ClInclude Include="include\bullets.h" />
     <ClInclude Include="include\enemies.h" />
     <ClInclude Include="include\player.h" />
-    <ClInclude Include="include\thoatgame.h" />
+    <ClInclude Include="include\game.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

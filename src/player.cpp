@@ -40,6 +40,7 @@ void controlplayer(player& p, SDL_Event& e)
 			break;
 		case SDLK_DOWN:
 			p.rect.y += p.speed;
+			break;
 		}
 	}
 }
