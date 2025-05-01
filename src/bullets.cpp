@@ -20,7 +20,7 @@ void createplayerbullet(vector<bullet>& b1, player& p)
 	temp.speed = 20.0;
 	b1.push_back(temp);
 }
-void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e,player&p)
+void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e, player& p)
 {
 	int n = e.size();
 	Uint32 curenttime = SDL_GetTicks();
@@ -35,10 +35,14 @@ void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e,player&p)
 			tmp.rect.w = 10;
 			tmp.rect.h = 10;
 			tmp.speed = 15.0;
+			if (p.score >= 1000)
+			{
+				tmp.speed = 30.0;
+			}
 			b2.push_back(tmp);
 			e[i].shoottime = curenttime + (rand() % 2000 + 1000);
+
 		}
- 
 	}
 }
 void updateplayerbullet(vector<bullet>& b1)
@@ -135,12 +139,15 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&
 		{
 			if (SDL_HasIntersection(&b1[i].rect, &e[j].rect))
 			{
-
 				    p.score += 10;
-					p.combo++;
+			    	p.combo++;
+				   e[j].health -= 50;
+				   if (e[j].health == 0)
+				   {
+					   e.erase(e.begin() + j);
+				   }
 					createbarcombo(cb, p);
-		     		b1.erase(b1.begin() + i);
-					e.erase(e.begin() + j);
+					b1.erase(b1.begin() + i);
 					break;
 	
 			}

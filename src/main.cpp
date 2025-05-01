@@ -5,7 +5,8 @@
 #include"enemies.h"
 #include"bullets.h"
 #include"game.h"
-#include"barHP.h";
+#include"barHP.h"
+#include"Boss.h"
 #include<SDL_image.h>
 #include<SDL_ttf.h>
 using namespace std;
@@ -35,6 +36,7 @@ int main(int argc, char* agv[])
 	bool gameover = false;
 	SDL_Event event;
 	player p;
+	Boss boss;
 	vector<enemy>e;
 	vector<bullet>b1;
 	vector<bullet>b2;
@@ -45,6 +47,8 @@ int main(int argc, char* agv[])
 	createplayer(p);
 	bool gamestart = false;
 	startgame(renderer, gamestart);
+
+	bool bossSpawned = false;
 	while (running)
 	{
 		
@@ -76,10 +80,16 @@ int main(int argc, char* agv[])
 		renderBackground(renderer, backgroundTexture);
 		updateplayer(p);
 		renderplayer(p, renderer,planeTexture);
-		spawnenemy(e);
-		updateenemies(e);
+
+		if (!bossSpawned)
+		{
+			spawnenemy(e, p);
+			createenemiesbullet(b2, e, p);
+		}
+
+		updateEnemies(e,p);
 		renderEnemies(e, renderer,enemyTexture);
-		createenemiesbullet(b2, e,p);
+	//	createenemiesbullet(b2, e, p);
 		updateplayerbullet(b1);
 		updateenemiesbullet(b2);
 		updatenuclearbomb(b3);
@@ -89,8 +99,24 @@ int main(int argc, char* agv[])
 		checkcollision1(b1, e, p, cb);
 		checkcollision2(b2, p, HP, cb);
 		nuclearbombexplode(b3, e, p,b2);
-		checkcollisionenemy(e);
+		checkcollisionEandP(e,p,HP);
+	    checkcollisionEnemies(e);
 		renderbarhp(renderer, HP);
+
+		if (p.score >= 3000 && !bossSpawned)
+		{
+			initBoss(boss);
+			bossSpawned = true;
+			e.clear();
+			b2.clear();
+		}
+
+		if (bossSpawned)
+		{
+			updateBoss(boss);
+			renderBoss(boss, renderer);
+		}
+
 		SDL_Delay(16);
 		if (p.health == 0)
 		{

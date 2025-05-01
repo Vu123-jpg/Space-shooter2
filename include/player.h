@@ -9,9 +9,9 @@ struct player
 	SDL_Rect rect;
 	int speed;
 	int score;
-	int highscore = 0;
+	int highscore= 0;
 	int health;
-	int combo = 0;
+	int combo = 0 ;
 };
 void createplayer(player& p);
 void updateplayer(player& p);
