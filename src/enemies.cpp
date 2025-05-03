@@ -48,15 +48,23 @@ void spawnenemy(vector<enemy>& e,player&p) {
 
 void updateEnemies(vector<enemy>& e, player& p) {
 	if (e.empty()) return;
+	if (p.score >= 1000) {
+		for (int i = 0; i < e.size(); i++) {
+			if (!e[i].isAttack && rand() % 1000 < 3) { 
+				e[i].isAttack = true;
+			}
+		}
+	}
 	for (int i = 0; i < e.size(); i++) {
 		if (e[i].posdisY < 150) {
 			e[i].poseY += e[i].speed / 10;
 			e[i].rect.y = (int)e[i].poseY;
 			e[i].posdisY += e[i].speed / 10;
 		}
-
-		if (p.score >= 1000) {
-				e[i].rect.y += e[i].speed / 5;
+		else if (e[i].isAttack)
+		{
+			e[i].poseY += e[i].speed / 5;
+			e[i].rect.y = (int)e[i].poseY;
 		}
 
 		if (e[i].rect.y > 600) {
@@ -64,6 +72,7 @@ void updateEnemies(vector<enemy>& e, player& p) {
 			e[i].rect.x = rand() % 800;
 			e[i].posdisY = 150;
 			e[i].speed = 20;
+			e[i].isAttack = false;
 		}
 
 		if (e[i].rect.y >= 150 && e[i].posdisY >= 150) {
@@ -81,8 +90,16 @@ void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer, SDL_Texture* enemyT
 	}
 }
 
-void checkcollisionEandP(vector<enemy>& e,player&p,vector<hp>&HP)
+
+
+void checkcollisionEandP(vector<enemy>& e,player&p,vector<hp>&HP,SDL_Renderer*renderer)
 {
+	SDL_Texture* explosion1 = IMG_LoadTexture(renderer, "asset/explosion1.png");
+	SDL_Texture* explosion2 = IMG_LoadTexture(renderer, "asset/explosion2.png");
+	SDL_Texture* explosion3 = IMG_LoadTexture(renderer, "asset/explosion3.png");
+	SDL_Rect explosionRect;
+	explosionRect.w = 128;
+	explosionRect.h = 128;
 	for (int i = 0;i < e.size();i++)
 	{
 		if (SDL_HasIntersection(&e[i].rect, &p.rect))
@@ -91,17 +108,40 @@ void checkcollisionEandP(vector<enemy>& e,player&p,vector<hp>&HP)
 			updatebarhp(HP, p);
 			if (!e.empty())
 			{
+				explosionRect.x = p.rect.x;
+				explosionRect.y = p.rect.y;
+				e[i].explosion.addFrame(explosion1);
+				e[i].explosion.addFrame(explosion2);
+				e[i].explosion.addFrame(explosion3);
+				e[i].explosion.update();
+				e[i].explosion.setFrameDelay(500);
+				e[i].explosion.setLoop(true);
+				SDL_Texture* currentFrame = e[i].explosion.getCurrentFrame();
+				if (currentFrame) {
+					SDL_RenderCopy(renderer, currentFrame, nullptr, &explosionRect);
+				}
 				e.erase(e.begin() + i);
 				i--;
 			}
 		}
 	}
+	SDL_DestroyTexture(explosion1);
+	SDL_DestroyTexture(explosion2);
+	SDL_DestroyTexture(explosion3);
 }
 
-void checkcollisionEnemies(vector<enemy>& e)
-{
-	vector<bool> toRemove(e.size(), false);// danh dau nhung ke dich va cham
 
+void checkcollisionEnemies(vector<enemy>& e,SDL_Renderer*renderer)
+{
+	SDL_Texture* explosion1 = IMG_LoadTexture(renderer, "asset/explosion1.png");
+	SDL_Texture* explosion2 = IMG_LoadTexture(renderer, "asset/explosion2.png");
+	SDL_Texture* explosion3 = IMG_LoadTexture(renderer, "asset/explosion3.png");
+	SDL_Rect explosionRect;
+	explosionRect.w = 128;
+	explosionRect.h = 128;
+
+
+	vector<bool> toRemove(e.size(), false);
 	for (int i = 0; i < e.size(); ++i)
 	{
 		for (int j = i + 1; j < e.size(); ++j)
@@ -115,12 +155,27 @@ void checkcollisionEnemies(vector<enemy>& e)
 		}
 	}
 
-	// Xóa ke dich va cham voi nhau
+
 	for (int i = e.size() - 1; i >= 0; --i)
 	{
 		if (toRemove[i])
 		{
+			explosionRect.x = e[i].rect.x;
+			explosionRect.y = e[i].rect.y;
+			e[i].explosion.addFrame(explosion1);
+			e[i].explosion.addFrame(explosion2);
+			e[i].explosion.addFrame(explosion3);
+			e[i].explosion.update();
+			e[i].explosion.setFrameDelay(500);
+			e[i].explosion.setLoop(true);
+			SDL_Texture* currentFrame = e[i].explosion.getCurrentFrame();
+			if (currentFrame) {
+				SDL_RenderCopy(renderer, currentFrame, nullptr, &explosionRect);
+			}
 			e.erase(e.begin() + i);
 		}
 	}
+	SDL_DestroyTexture(explosion1);
+	SDL_DestroyTexture(explosion2);
+	SDL_DestroyTexture(explosion3);
 }

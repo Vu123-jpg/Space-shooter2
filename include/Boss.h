@@ -3,7 +3,9 @@
 
 #include <SDL.h>
 #include <vector>
-
+#include"player.h"
+#include"barHP.h"
+#include"Animation.h"
 struct Bullet {
     SDL_Rect rect;
     int speed;
@@ -12,25 +14,29 @@ struct Bullet {
 struct Bomb {
     SDL_Rect rect;
     int speed;
+    bool isExploded;
+    int explosionRadius = 500;
+    int explosionY;
+    int explosionTimer;
 };
-
 struct Boss {
     SDL_Rect rect;
-    int health;
+    int health = 5000;
     int speedX;
     int shootCooldown;
     int bombCooldown;
 
     std::vector<Bullet> bullets;
     std::vector<Bomb> bombs;
+    Animation explosionbomb;
 };
 
-// Hàm khởi tạo Boss
 Boss createBoss(int x, int y);
 
-// Các hàm xử lý boss
+
 void initBoss(Boss& boss);
-void updateBoss(Boss& boss);
+void updateBoss(Boss& boss, player& p, vector<hp>& HP);
+void updatebomb(Boss& boss, player& p);
 void renderBoss(Boss& boss, SDL_Renderer* renderer);
 
 #endif

@@ -4,6 +4,7 @@
 #include<string>
 #include"game.h"
 #include"bullets.h"
+#include"Boss.h"
 #include"barHP.h"
 using namespace std;
 void startgame(SDL_Renderer* renderer, bool& gamestart)
@@ -63,7 +64,7 @@ void renderendgame(SDL_Renderer* renderer, SDL_Texture* endTexture)
 	SDL_RenderCopy(renderer, endTexture, NULL, &endRect);
 	SDL_RenderPresent(renderer);
 }
-void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p,vector<hp>&HP,vector<bullet>&b3)
+void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p,vector<hp>&HP,vector<bullet>&b3,Boss&boss,bool&bossSpawned,vector<combo>&cb)
 {
 	p.combo = 0;
 	if (p.score >= p.highscore)
@@ -83,6 +84,10 @@ void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p
 	b1.clear();
 	b2.clear();
 	b3.clear();
+	cb.clear();
+	boss.bombs.clear();
+	boss.bullets.clear();
+	 bossSpawned = false;
 	createbarhp(HP);
 }
 void renderscore(SDL_Renderer* renderer,TTF_Font*font, player& p) {

@@ -7,6 +7,7 @@
 #include"game.h"
 #include"barHP.h"
 #include"Boss.h"
+#include"Animation.h"
 #include<SDL_image.h>
 #include<SDL_ttf.h>
 using namespace std;
@@ -23,19 +24,27 @@ int main(int argc, char* agv[])
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 
-	SDL_Texture* planeTexture = IMG_LoadTexture(renderer, "asset/plane.png");
+
 	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer,"asset/enemies.jpg");
 	SDL_Texture* backgroundTexture = IMG_LoadTexture(renderer, "asset/background.jpg");
 	SDL_Texture* bulletsTexture = IMG_LoadTexture(renderer, "asset/bullets.png");
 	SDL_Texture* startTexture = IMG_LoadTexture(renderer, "asset/start screen.png");
 	SDL_Texture*endTexture= IMG_LoadTexture(renderer, "asset/game_over.png");
 
-	renderstartgame(renderer, startTexture);
 
+	SDL_Texture* engine1 = IMG_LoadTexture(renderer, "asset/engine1.png");
+	SDL_Texture* engine2 = IMG_LoadTexture(renderer, "asset/engine2.png");
+	SDL_Texture* engine3 = IMG_LoadTexture(renderer, "asset/engine3.png");
+
+	player p;
+	createplayer(p);
+	p.engine.addFrame(engine1);
+	p.engine.addFrame(engine2);
+	p.engine.addFrame(engine3);
+	renderstartgame(renderer, startTexture);
 	bool running = true;
 	bool gameover = false;
 	SDL_Event event;
-	player p;
 	Boss boss;
 	vector<enemy>e;
 	vector<bullet>b1;
@@ -47,18 +56,25 @@ int main(int argc, char* agv[])
 	createplayer(p);
 	bool gamestart = false;
 	startgame(renderer, gamestart);
+	Uint32 lastTime = SDL_GetTicks();
 
 	bool bossSpawned = false;
 	while (running)
 	{
 		
+		Uint32 currentTime = SDL_GetTicks();
+		float Time = (currentTime - lastTime) / 1000.0;
+		lastTime = currentTime;
+
+		SDL_PumpEvents();
+		const Uint8* keystates = SDL_GetKeyboardState(NULL);
 		while (SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_QUIT)
 			{
 				running = false;
 			}
-			controlplayer(p, event);
+			controlplayer(p, event,keystates,Time);
 			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
 			{
 				createplayerbullet(b1, p);
@@ -78,9 +94,11 @@ int main(int argc, char* agv[])
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 		renderBackground(renderer, backgroundTexture);
+		
 		updateplayer(p);
-		renderplayer(p, renderer,planeTexture);
-
+		renderplayer(p, renderer);
+		p.engine.update();  
+		p.engine.render(renderer, p.rect.x, p.rect.y);
 		if (!bossSpawned)
 		{
 			spawnenemy(e, p);
@@ -88,35 +106,21 @@ int main(int argc, char* agv[])
 		}
 
 		updateEnemies(e,p);
-		renderEnemies(e, renderer,enemyTexture);
-	//	createenemiesbullet(b2, e, p);
+		renderEnemies(e, renderer, enemyTexture);
 		updateplayerbullet(b1);
 		updateenemiesbullet(b2);
 		updatenuclearbomb(b3);
 		renderplayerbullet(b1, renderer, bulletsTexture);
 		renderenemiesbullet(b2, renderer);
 		rendernuclearbomb(b3, renderer);
-		checkcollision1(b1, e, p, cb);
+		checkcollision1(b1, e, p, cb,renderer);
 		checkcollision2(b2, p, HP, cb);
-		nuclearbombexplode(b3, e, p,b2);
-		checkcollisionEandP(e,p,HP);
-	    checkcollisionEnemies(e);
+		nuclearbombexplode(b3, e, p,b2,renderer);
+		checkcollisionEandP(e,p,HP,renderer);
+	    checkcollisionEnemies(e,renderer);
 		renderbarhp(renderer, HP);
 
-		if (p.score >= 3000 && !bossSpawned)
-		{
-			initBoss(boss);
-			bossSpawned = true;
-			e.clear();
-			b2.clear();
-		}
-
-		if (bossSpawned)
-		{
-			updateBoss(boss);
-			renderBoss(boss, renderer);
-		}
-
+	
 		SDL_Delay(16);
 		if (p.health == 0)
 		{
@@ -126,7 +130,7 @@ int main(int argc, char* agv[])
 			endgame(renderer, restart);
 			if (restart)
 			{
-				resetgame(b1, b2, e, p, HP, b3);
+				resetgame(b1, b2, e, p, HP, b3,boss,bossSpawned,cb);
 
 			}
 			else
@@ -135,6 +139,19 @@ int main(int argc, char* agv[])
 				gameover = true;
 				
 			}
+		}
+
+		if (p.score >= 2000 && !bossSpawned)
+		{
+			initBoss(boss);
+			bossSpawned = true;
+			e.clear();
+			b2.clear();
+		}
+		if (bossSpawned)
+		{
+			updateBoss(boss, p, HP);
+			renderBoss(boss, renderer);
 		}
 		renderscore(renderer, font, p);
 		renderbarcombo(renderer, cb);
@@ -148,12 +165,14 @@ int main(int argc, char* agv[])
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	SDL_DestroyTexture(planeTexture);
 	SDL_DestroyTexture(enemyTexture);
 	SDL_DestroyTexture(backgroundTexture);
 	SDL_DestroyTexture(bulletsTexture);
 	SDL_DestroyTexture(startTexture);
 	SDL_DestroyTexture(endTexture);
+	SDL_DestroyTexture(engine1);
+	SDL_DestroyTexture(engine2);
+	SDL_DestroyTexture(engine3);
 	SDL_Quit();
 	TTF_CloseFont(font);
 	TTF_Quit();

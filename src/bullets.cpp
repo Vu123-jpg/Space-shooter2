@@ -61,7 +61,7 @@ void updateenemiesbullet(vector<bullet>& b2)
 {
 	for (int i = b2.size()-1;i >=0;i--)
 	{
-		b2[i].posY += b2[i].speed / 5;
+		b2[i].posY += b2[i].speed / 3;
 		b2[i].rect.y = (int)b2[i].posY;
 		if (b2[i].rect.y >600)
 		{
@@ -118,7 +118,7 @@ void rendernuclearbomb(vector<bullet>&b3,SDL_Renderer*renderer)
 		SDL_RenderFillRect(renderer, &b3[i].rect);
 	}
 }
-void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e,player&p,vector<bullet>&b2)
+void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e,player&p,vector<bullet>&b2,SDL_Renderer*renderer)
 {
 	for (int i = b3.size()-1;i >= 0;i--)
 	{
@@ -128,32 +128,60 @@ void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e,player&p,vector<bul
 			e.clear();
 			b2.clear();
 			p.score += 100;
+			SDL_Rect fullScreenRect = { 0, 0, 800, 600 };
+
+			SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128); 
+			SDL_RenderFillRect(renderer, &fullScreenRect);
+
+			
+			SDL_Delay(100);
 		}
 	}
 }
-void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&cb)
+void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&cb,SDL_Renderer*renderer)
 {
+	SDL_Texture* explosion1 = IMG_LoadTexture(renderer, "asset/explosion1.png");
+	SDL_Texture* explosion2 = IMG_LoadTexture(renderer, "asset/explosion2.png");
+	SDL_Texture* explosion3 = IMG_LoadTexture(renderer, "asset/explosion3.png");
+	SDL_Rect explosionRect;
+	explosionRect.w = 128;
+	explosionRect.h = 128;
+
 	for(int i=b1.size()-1;i>=0;i--)
 	{
 		for(int j=e.size()-1;j>=0;j--)
 		{
 			if (SDL_HasIntersection(&b1[i].rect, &e[j].rect))
 			{
-				    p.score += 10;
-			    	p.combo++;
 				   e[j].health -= 50;
 				   if (e[j].health == 0)
-				   {
+				   {   
+					   p.score += 10;
+					   p.combo++;
+					   explosionRect.x = e[j].rect.x;
+					   explosionRect.y = e[j].rect.y;
+					   e[j].explosion.addFrame(explosion1);
+					   e[j].explosion.addFrame(explosion2);
+					   e[j].explosion.addFrame(explosion3);
+					   e[j].explosion.update();
+					   e[j].explosion.setFrameDelay(500);
+					   e[j].explosion.setLoop(false);
+					   SDL_Texture* currentFrame = e[j].explosion.getCurrentFrame();
+					   if (currentFrame) {
+						   SDL_RenderCopy(renderer, currentFrame, nullptr, &explosionRect);
+					   }
 					   e.erase(e.begin() + j);
 				   }
 					createbarcombo(cb, p);
 					b1.erase(b1.begin() + i);
 					break;
-	
 			}
 
 		}
 	}
+	SDL_DestroyTexture(explosion1);
+	SDL_DestroyTexture(explosion2);
+	SDL_DestroyTexture(explosion3);
 }
 void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP,vector<combo>&cb)
 {
@@ -163,7 +191,6 @@ void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP,vector<combo>&c
 		{
 			b2.erase(b2.begin() + i);
 			p.health -= 100;
-			p.combo = 0;
 			createbarcombo(cb, p);
 			updatebarhp(HP, p);
 		}
