@@ -17,13 +17,12 @@ void Animation::setLoop(bool Loop) {
 }
 
 void Animation::update() {
-    frameTime++;
-  
-    if (frameTime >= frameDelay) {
-        frameTime = 0;  
+    Uint32 currentTime = SDL_GetTicks(); 
+    if (currentTime - lastFrameTime >= frameDelay) {
+        lastFrameTime = currentTime;  
+
         currentFrame++;
 
-      
         if (currentFrame >= frames.size()) {
             if (loop) {
                 currentFrame = 0;  
@@ -34,6 +33,7 @@ void Animation::update() {
         }
     }
 }
+
 
 //vi tri
 void Animation::render(SDL_Renderer* renderer, int x, int y) {

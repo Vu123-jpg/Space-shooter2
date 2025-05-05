@@ -22,10 +22,12 @@ struct enemy {
     bool isAttack = false;
     Uint32 shoottime;
     Animation explosion;
+    Animation Enemies;
+    bool animationInitialized = false;
 };
 void spawnenemy(vector<enemy>& e,player&p);
 void updateEnemies(vector<enemy>& e,player&p);
-void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer, SDL_Texture* enemyTexture);
+void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer,SDL_Texture*enemiesTexture);
 void checkcollisionEandP(vector<enemy>& e,player&p,vector<hp>&HP,SDL_Renderer*renderer);
 void checkcollisionEnemies(vector<enemy>& e,SDL_Renderer*renderer);
 

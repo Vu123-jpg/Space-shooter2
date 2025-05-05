@@ -1,5 +1,6 @@
 #ifndef BARHP_H
-#define BARHP_H
+#define BARHP_H\
+//quan li thanh mau va thnah no cua nguoi choi
 #include<SDL.h>
 #include"player.h"
 #include<vector>

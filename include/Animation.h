@@ -7,7 +7,8 @@
 // quan li animation
 struct Animation {
     std::vector<SDL_Texture*> frames;  
-    int currentFrame;                  
+    int currentFrame;
+    int lastFrameTime;
     int frameDelay;                    
     int frameTime;                    
     bool loop;                         

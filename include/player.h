@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include "Animation.h"
 
-// Cấu trúc player
+//quan li nguoi choi
 struct player {
     SDL_Rect rect;
     float x, y;

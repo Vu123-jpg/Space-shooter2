@@ -1,4 +1,4 @@
-#include<iostream>
+﻿#include<iostream>
 #include<SDL.h>
 #include<SDL_Rect.h>
 #include"player.h"
@@ -16,7 +16,7 @@ int main(int argc, char* agv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
-	IMG_Init(IMG_INIT_PNG); 
+	IMG_Init(IMG_INIT_PNG);
 	TTF_Font* font = TTF_OpenFont("asset/Retro Gaming.ttf", 24);
 	SDL_Color textColor = { 255, 255, 255, 255 };
 
@@ -25,12 +25,15 @@ int main(int argc, char* agv[])
 
 
 
-	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer,"asset/enemies.jpg");
+	SDL_Texture* enemiesTexture = IMG_LoadTexture(renderer, "asset/enemies.png");
 	SDL_Texture* backgroundTexture = IMG_LoadTexture(renderer, "asset/background.jpg");
 	SDL_Texture* bulletsTexture = IMG_LoadTexture(renderer, "asset/bullets.png");
-	SDL_Texture* startTexture = IMG_LoadTexture(renderer, "asset/start screen.png");
-	SDL_Texture*endTexture= IMG_LoadTexture(renderer, "asset/game_over.png");
-
+	SDL_Texture* bulletsETexture = IMG_LoadTexture(renderer, "asset/bulletsE.png");
+	SDL_Texture* bulletsBossTexture = IMG_LoadTexture(renderer, "asset/bulletsBoss.png");
+	SDL_Texture* startTexture = IMG_LoadTexture(renderer, "asset/start screen.jpg");
+	SDL_Texture* endTexture = IMG_LoadTexture(renderer, "asset/game_over.png");
+	SDL_Texture* bombTexture = IMG_LoadTexture(renderer, "asset/bomb.png");
+	SDL_Texture* bossTexture = IMG_LoadTexture(renderer, "asset/boss.png");
 
 	SDL_Texture* engine1 = IMG_LoadTexture(renderer, "asset/engine1.png");
 	SDL_Texture* engine2 = IMG_LoadTexture(renderer, "asset/engine2.png");
@@ -55,13 +58,14 @@ int main(int argc, char* agv[])
 	createbarhp(HP);
 	createplayer(p);
 	bool gamestart = false;
+	bool victoryAnimLoaded = false;
 	startgame(renderer, gamestart);
 	Uint32 lastTime = SDL_GetTicks();
 
 	bool bossSpawned = false;
 	while (running)
 	{
-		
+
 		Uint32 currentTime = SDL_GetTicks();
 		float Time = (currentTime - lastTime) / 1000.0;
 		lastTime = currentTime;
@@ -74,7 +78,7 @@ int main(int argc, char* agv[])
 			{
 				running = false;
 			}
-			controlplayer(p, event,keystates,Time);
+			controlplayer(p, event, keystates, Time);
 			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
 			{
 				createplayerbullet(b1, p);
@@ -89,15 +93,15 @@ int main(int argc, char* agv[])
 					createbarcombo(cb, p);
 				}
 			}
-			
+
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 		renderBackground(renderer, backgroundTexture);
-		
+
 		updateplayer(p);
 		renderplayer(p, renderer);
-		p.engine.update();  
+		p.engine.update();
 		p.engine.render(renderer, p.rect.x, p.rect.y);
 		if (!bossSpawned)
 		{
@@ -105,22 +109,22 @@ int main(int argc, char* agv[])
 			createenemiesbullet(b2, e, p);
 		}
 
-		updateEnemies(e,p);
-		renderEnemies(e, renderer, enemyTexture);
+		updateEnemies(e, p);
+		renderEnemies(e, renderer, enemiesTexture);
 		updateplayerbullet(b1);
 		updateenemiesbullet(b2);
 		updatenuclearbomb(b3);
 		renderplayerbullet(b1, renderer, bulletsTexture);
-		renderenemiesbullet(b2, renderer);
+		renderenemiesbullet(b2, renderer,bulletsETexture);
 		rendernuclearbomb(b3, renderer);
-		checkcollision1(b1, e, p, cb,renderer);
+		checkcollision1(b1, e, p, cb, renderer);
 		checkcollision2(b2, p, HP, cb);
-		nuclearbombexplode(b3, e, p,b2,renderer);
-		checkcollisionEandP(e,p,HP,renderer);
-	    checkcollisionEnemies(e,renderer);
+		nuclearbombexplode(b3, e, p, b2, renderer);
+		checkcollisionEandP(e, p, HP, renderer);
+		checkcollisionEnemies(e, renderer);
 		renderbarhp(renderer, HP);
 
-	
+
 		SDL_Delay(16);
 		if (p.health == 0)
 		{
@@ -130,14 +134,14 @@ int main(int argc, char* agv[])
 			endgame(renderer, restart);
 			if (restart)
 			{
-				resetgame(b1, b2, e, p, HP, b3,boss,bossSpawned,cb);
+				resetgame(b1, b2, e, p, HP, b3, boss, bossSpawned, cb);
 
 			}
 			else
 			{
 				running = false;
 				gameover = true;
-				
+
 			}
 		}
 
@@ -147,14 +151,37 @@ int main(int argc, char* agv[])
 			bossSpawned = true;
 			e.clear();
 			b2.clear();
+			cb.clear();
 		}
+
+		renderscore(renderer, font, p);
+		renderbarcombo(renderer, cb);
+
+
+		if (!victoryAnimLoaded) {
+			loadVictoryAnim(renderer);
+			victoryAnimLoaded = true; 
+		}
+
 		if (bossSpawned)
 		{
 			updateBoss(boss, p, HP);
-			renderBoss(boss, renderer);
+			renderBoss(boss, renderer, bombTexture, bossTexture,bulletsBossTexture);
+			checkcolisionboss(b1, boss);
+			 
+
+			if (boss.health <= 0)
+			{
+				
+					renderWingame(renderer);
+					SDL_RenderPresent(renderer);
+					SDL_Delay(300);
+
+			}
+				
 		}
-		renderscore(renderer, font, p);
-		renderbarcombo(renderer, cb);
+
+
 		if (cb.size() == 10)
 		{
 			renderbarcombofull(renderer, cb);
@@ -162,14 +189,17 @@ int main(int argc, char* agv[])
 		SDL_RenderPresent(renderer);
 	}
 
-
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	SDL_DestroyTexture(enemyTexture);
+	SDL_DestroyTexture(enemiesTexture);
 	SDL_DestroyTexture(backgroundTexture);
 	SDL_DestroyTexture(bulletsTexture);
+	SDL_DestroyTexture(bulletsETexture);
+	SDL_DestroyTexture(bulletsBossTexture);
 	SDL_DestroyTexture(startTexture);
 	SDL_DestroyTexture(endTexture);
+	SDL_DestroyTexture(bombTexture);
+	SDL_DestroyTexture(bossTexture);
 	SDL_DestroyTexture(engine1);
 	SDL_DestroyTexture(engine2);
 	SDL_DestroyTexture(engine3);

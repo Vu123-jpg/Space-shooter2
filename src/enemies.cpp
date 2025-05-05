@@ -7,9 +7,10 @@
 #include"barHP.h"
 #include<cstdlib>
 #include<unordered_set>
+//quan li ke dich
 using namespace std;
 int maxEnemies = 10;
-int cols = 10; // cot de luu ke dich 
+int cols = 10; 
 int colwidth = 800 / cols;
 void spawnenemy(vector<enemy>& e,player&p) {
 	unordered_set<int>existcols;
@@ -37,7 +38,7 @@ void spawnenemy(vector<enemy>& e,player&p) {
 		}
 		else
 		{
-			tmp.health = 100;
+			tmp.health = 50;
 		}
 		tmp.posdisY = tmp.distance;
 		tmp.shoottime = SDL_GetTicks() + (rand() % 2000 + 1000);
@@ -45,6 +46,7 @@ void spawnenemy(vector<enemy>& e,player&p) {
 	}
 
 }
+
 
 void updateEnemies(vector<enemy>& e, player& p) {
 	if (e.empty()) return;
@@ -82,11 +84,9 @@ void updateEnemies(vector<enemy>& e, player& p) {
 }
 
 
-void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer, SDL_Texture* enemyTexture) {
-	if (e.empty()) return;
-
-	for (int i = 0;i<(int)e.size();i++) {
-		SDL_RenderCopy(renderer, enemyTexture, nullptr, &e[i].rect);
+void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer,SDL_Texture*enemiesTexture) {
+	for (int i = 0; i < (int)e.size(); i++) {
+			SDL_RenderCopy(renderer, enemiesTexture, nullptr, &e[i].rect);
 	}
 }
 
@@ -114,8 +114,8 @@ void checkcollisionEandP(vector<enemy>& e,player&p,vector<hp>&HP,SDL_Renderer*re
 				e[i].explosion.addFrame(explosion2);
 				e[i].explosion.addFrame(explosion3);
 				e[i].explosion.update();
-				e[i].explosion.setFrameDelay(500);
-				e[i].explosion.setLoop(true);
+				e[i].explosion.setFrameDelay(5000);
+				e[i].explosion.setLoop(false);
 				SDL_Texture* currentFrame = e[i].explosion.getCurrentFrame();
 				if (currentFrame) {
 					SDL_RenderCopy(renderer, currentFrame, nullptr, &explosionRect);
@@ -166,8 +166,8 @@ void checkcollisionEnemies(vector<enemy>& e,SDL_Renderer*renderer)
 			e[i].explosion.addFrame(explosion2);
 			e[i].explosion.addFrame(explosion3);
 			e[i].explosion.update();
-			e[i].explosion.setFrameDelay(500);
-			e[i].explosion.setLoop(true);
+			e[i].explosion.setFrameDelay(5000);
+			e[i].explosion.setLoop(false);
 			SDL_Texture* currentFrame = e[i].explosion.getCurrentFrame();
 			if (currentFrame) {
 				SDL_RenderCopy(renderer, currentFrame, nullptr, &explosionRect);

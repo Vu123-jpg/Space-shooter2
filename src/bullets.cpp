@@ -8,6 +8,7 @@
 #include"enemies.h"
 #include"barHP.h"
 #include<ctime>
+//quan li cac loai dan cua nguoi choi va ke dich,cac va cham
 bool restart;
 void createplayerbullet(vector<bullet>& b1, player& p)
 {
@@ -77,13 +78,12 @@ void renderplayerbullet(vector<bullet>& b1, SDL_Renderer* renderer,SDL_Texture*b
 		SDL_RenderCopy(renderer, bulletsTexture, nullptr, &b1[i].rect);
 	}
 }
-void renderenemiesbullet(vector<bullet>& b2, SDL_Renderer* renderer)
+void renderenemiesbullet(vector<bullet>& b2, SDL_Renderer* renderer,SDL_Texture*bulletsETexture)
 {
 	int k = b2.size();
 	for (int i = 0;i < k;i++)
 	{
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderFillRect(renderer, &b2[i].rect);
+		SDL_RenderCopy(renderer, bulletsETexture, nullptr, &b2[i].rect);
 	}
 }
 void createnuclearbomb(vector<bullet>& b3, player& p)
@@ -164,7 +164,7 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&
 					   e[j].explosion.addFrame(explosion2);
 					   e[j].explosion.addFrame(explosion3);
 					   e[j].explosion.update();
-					   e[j].explosion.setFrameDelay(500);
+					   e[j].explosion.setFrameDelay(5000);
 					   e[j].explosion.setLoop(false);
 					   SDL_Texture* currentFrame = e[j].explosion.getCurrentFrame();
 					   if (currentFrame) {
@@ -196,6 +196,21 @@ void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP,vector<combo>&c
 		}
 	}
 }
+
+void checkcolisionboss(vector<bullet>& b1, Boss& boss)
+{
+	for (int i = b1.size()-1;i >= 0;i--)
+	{
+		if (SDL_HasIntersection(&b1[i].rect, &boss.rect))
+		{
+			boss.health -= 100;
+			cout << boss.health << endl;
+			b1.erase(b1.begin() + i);
+			break;
+		}
+	}
+}
+
 
 
 

@@ -52,3 +52,4 @@ void renderplayer(player& p, SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, currentFrame, nullptr, &engineRect);
     }
 }
+

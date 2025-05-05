@@ -1,5 +1,7 @@
-﻿#include<iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
 #include<SDL.h>
+#include<SDL_image.h>
 #include<SDL_ttf.h>
 #include<string>
 #include"game.h"
@@ -7,6 +9,10 @@
 #include"Boss.h"
 #include"barHP.h"
 using namespace std;
+Animation victoryAnim;
+vector<SDL_Texture*> winFrames;
+bool victoryStarted = false;
+int backgroundY = 0; 
 void startgame(SDL_Renderer* renderer, bool& gamestart)
 {
 	bool menugame = false;
@@ -85,6 +91,8 @@ void resetgame(vector<bullet>& b1, vector<bullet>& b2, vector<enemy>& e,player&p
 	b2.clear();
 	b3.clear();
 	cb.clear();
+	boss.health = 5000;
+	boss.distance = -50;
 	boss.bombs.clear();
 	boss.bullets.clear();
 	 bossSpawned = false;
@@ -114,7 +122,42 @@ void renderscore(SDL_Renderer* renderer,TTF_Font*font, player& p) {
 	SDL_DestroyTexture(txTexture);
 }
 
-void renderBackground( SDL_Renderer* renderer, SDL_Texture* backgroundTexture) {
-	SDL_Rect bgRect = { 0, 0, 800, 600 };
-	SDL_RenderCopy(renderer,backgroundTexture, NULL, &bgRect);
+
+void renderBackground(SDL_Renderer* renderer, SDL_Texture* backgroundTexture) {
+	backgroundY += 2;
+	if (backgroundY >= 600)
+		backgroundY = 0;
+
+	SDL_Rect bg1 = { 0, backgroundY, 800, 600 };
+	SDL_Rect bg2 = { 0, backgroundY - 600, 800, 600 };
+
+	SDL_RenderCopy(renderer, backgroundTexture, NULL, &bg1);
+	SDL_RenderCopy(renderer, backgroundTexture, NULL, &bg2);
+}
+
+// Tải ảnh vào một lần duy nhất
+void loadVictoryAnim(SDL_Renderer* renderer) {
+	for (int i = 0; i <= 20; ++i) {
+		char filename[64];
+		sprintf_s(filename, sizeof(filename), "asset/win_e_%02d.png", i);
+		SDL_Texture* frame = IMG_LoadTexture(renderer, filename);
+		victoryAnim.addFrame(frame);
+	}
+	victoryAnim.setFrameDelay(5);
+	victoryAnim.setLoop(false);
+}
+
+void renderWingame(SDL_Renderer* renderer)
+{
+	
+	victoryAnim.update();
+
+
+	SDL_Texture* currentFrame = victoryAnim.getCurrentFrame();
+	if (currentFrame) {
+
+		SDL_Rect dst = { 0,0,800,600 };
+	
+		SDL_RenderCopy(renderer, currentFrame, nullptr, &dst);
+	}
 }
