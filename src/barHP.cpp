@@ -34,13 +34,46 @@ void renderbarhp(SDL_Renderer* renderer, vector<hp>& HP)
         SDL_RenderFillRect(renderer, &HP[i].rect);
     }
 }
-void createbarcombo(vector<combo>&cb, player& p)
+
+
+
+void createHPboss(vector<hp>& HPboss)
+{
+    HPboss.clear();
+    int startX = 300;
+    for (int i = 0; i < 25; i++) {
+        hp newHP;
+        newHP.rect.x = startX + i * 5;
+        newHP.rect.y = 35;
+        newHP.rect.w = 10;
+        newHP.rect.h = 20;
+        HPboss.push_back(newHP);
+    }
+}
+
+void updateHPboss(vector<hp>& HPboss)
+{
+    HPboss.pop_back();
+}
+
+void renderHPboss(SDL_Renderer* renderer, vector<hp>& HPboss)
+{
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    for (size_t i = 0; i < HPboss.size(); i++)
+    {
+        SDL_RenderFillRect(renderer, &HPboss[i].rect);
+    }
+}
+
+
+
+void createbarcombo(vector<combo>& cb, player& p)
 {
     cb.clear();
     if (p.combo == 0) return;
     int startX = 650;
     combo newcb;
-    for(int i=0;i<p.combo/5;i++)
+    for (int i = 0;i < p.combo / 5;i++)
     {
         newcb.rect.x = startX + i * 10;
         newcb.rect.y = 35;
@@ -50,6 +83,7 @@ void createbarcombo(vector<combo>&cb, player& p)
         if (cb.size() == 10) return;
     }
 }
+
 void renderbarcombo(SDL_Renderer* renderer, vector<combo>& cb)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
@@ -58,6 +92,7 @@ void renderbarcombo(SDL_Renderer* renderer, vector<combo>& cb)
         SDL_RenderFillRect(renderer, &cb[i].rect);
     }
 }
+
 void renderbarcombofull(SDL_Renderer* renderer, vector<combo>& cb)
 {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);

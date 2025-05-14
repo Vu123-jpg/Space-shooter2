@@ -8,6 +8,7 @@
 #include"barHP.h";
 #include"Boss.h"
 #include"Animation.h"
+
 //quan li cac su kien cua game
 void startgame(SDL_Renderer* renderer, bool &gamestart);
 void renderstartgame(SDL_Renderer* renderer, SDL_Texture* startTexture); //man hinh vao game

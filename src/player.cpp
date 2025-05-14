@@ -1,5 +1,6 @@
-﻿#include "Player.h"
+﻿#include "player.h"
 #include <SDL.h>
+
 
 void createplayer(player& p) {
     p.x = 400;

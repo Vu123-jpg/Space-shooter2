@@ -10,7 +10,7 @@
 //quan li ke dich
 using namespace std;
 int maxEnemies = 10;
-int cols = 10; 
+int cols = 10;
 int colwidth = 800 / cols;
 void spawnenemy(vector<enemy>& e,player&p) {
 	unordered_set<int>existcols;
@@ -20,7 +20,7 @@ void spawnenemy(vector<enemy>& e,player&p) {
 		int cole = e[i].rect.x / colwidth;
 			existcols.insert(cole);
 	}
-	while (e.size() < maxEnemies)
+	while (e.size() <maxEnemies)
 	{
 		int randcols = rand() % cols;
 		if (existcols.count(randcols)) continue;
@@ -44,14 +44,16 @@ void spawnenemy(vector<enemy>& e,player&p) {
 		tmp.shoottime = SDL_GetTicks() + (rand() % 2000 + 1000);
 		e.push_back(tmp);
 	}
-
 }
 
 
-void updateEnemies(vector<enemy>& e, player& p) {
-	if (e.empty()) return;
+void updateEnemies(vector<enemy>& e, player& p,vector<bullet>&b2) {
 	if (p.score >= 1000) {
 		for (int i = 0; i < e.size(); i++) {
+			if (e[i].distance >= 150)
+			{
+				createenemiesbullet(b2, e, p);
+			}
 			if (!e[i].isAttack && rand() % 1000 < 3) { 
 				e[i].isAttack = true;
 			}
@@ -65,7 +67,7 @@ void updateEnemies(vector<enemy>& e, player& p) {
 		}
 		else if (e[i].isAttack)
 		{
-			e[i].poseY += e[i].speed / 5;
+			e[i].poseY += e[i].speed / 4;
 			e[i].rect.y = (int)e[i].poseY;
 		}
 

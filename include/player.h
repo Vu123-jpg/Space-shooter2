@@ -19,6 +19,6 @@ struct player {
 void createplayer(player& p);          
 void updateplayer(player& p);          
 void controlplayer(player& p, SDL_Event& e, const Uint8* keystates, float Time); 
-void renderplayer(player& p, SDL_Renderer* renderer); // Vẽ player lên màn hình
+void renderplayer(player& p, SDL_Renderer* renderer); 
 
 #endif // PLAYER_H

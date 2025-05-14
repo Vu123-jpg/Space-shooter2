@@ -54,31 +54,3 @@ SDL_Texture* Animation::getCurrentFrame() const {
     return nullptr;
 }
 
-/*
-void EffectManager::addEngineFrame(SDL_Texture* texture) {
-    engineAnimation.addFrame(texture);  
-}
-
-void EffectManager::addExplosionFrame(SDL_Texture* texture) {
-    explosionAnimation.addFrame(texture); 
-}
-
-
-void EffectManager::addBombExplosionFrame(SDL_Texture* texture) {
-    bombExplosionAnimation.addFrame(texture);
-}
-
-
-void EffectManager::update() {
-    engineAnimation.update(); 
-    explosionAnimation.update();  // Cập nhật animation nổ
-    bombExplosionAnimation.update();  
-}
-
-// Render tất cả các animation trong EffectManager tại (x, y)
-void EffectManager::render(SDL_Renderer* renderer, int x, int y) {
-    engineAnimation.render(renderer, x, y);  // Render animation động cơ
-    explosionAnimation.render(renderer, x, y);  // Render animation nổ
-    bombExplosionAnimation.render(renderer, x, y);  // Render animation bom nổ
-}
-*/

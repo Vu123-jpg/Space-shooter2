@@ -31,7 +31,7 @@ void initBoss(Boss& boss) {
 
 void updateBoss(Boss& boss, player& p, vector<hp>& HP) {
     if (boss.distance < 130) {
-        boss.distance += 1;
+        boss.distance += 2;
         if (boss.distance >= 130)
             boss.distance = 130;
         boss.rect.y = boss.distance;
@@ -41,7 +41,7 @@ void updateBoss(Boss& boss, player& p, vector<hp>& HP) {
         boss.rect.x += boss.speedX;
         if (boss.rect.x <= 200 || boss.rect.x + boss.rect.w >= 600) {
             boss.speedX = -boss.speedX;
-        }
+        } 
 
         if (boss.shootCooldown <= 0) {
             Bullet b = {
@@ -49,7 +49,7 @@ void updateBoss(Boss& boss, player& p, vector<hp>& HP) {
                 5
             };
             boss.bullets.push_back(b);
-            boss.shootCooldown = 30;
+            boss.shootCooldown = 20;
         }
         else {
             boss.shootCooldown--;
@@ -78,7 +78,7 @@ void updateBoss(Boss& boss, player& p, vector<hp>& HP) {
         bomb.explosionRadius = 100;  
         bomb.explosionY = rand() % 200 + 300;  
         boss.bombs.push_back(bomb);
-        boss.bombCooldown = 120;
+        boss.bombCooldown = 80;
     }
     else {
         boss.bombCooldown--;

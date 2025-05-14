@@ -26,7 +26,7 @@ struct enemy {
     bool animationInitialized = false;
 };
 void spawnenemy(vector<enemy>& e,player&p);
-void updateEnemies(vector<enemy>& e,player&p);
+void updateEnemies(vector<enemy>& e,player&p,vector<bullet>&b2);
 void renderEnemies(vector<enemy>& e, SDL_Renderer* renderer,SDL_Texture*enemiesTexture);
 void checkcollisionEandP(vector<enemy>& e,player&p,vector<hp>&HP,SDL_Renderer*renderer);
 void checkcollisionEnemies(vector<enemy>& e,SDL_Renderer*renderer);

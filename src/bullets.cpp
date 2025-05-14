@@ -1,12 +1,14 @@
-#include<iostream>
+﻿#include<iostream>
 #include<vector>
 #include<SDL.h>
+#include<SDL_image.h>
 #include<cmath>
 #include"game.h"
 #include"bullets.h"
 #include"player.h"
 #include"enemies.h"
 #include"barHP.h"
+#include<SDL_mixer.h>
 #include<ctime>
 //quan li cac loai dan cua nguoi choi va ke dich,cac va cham
 bool restart;
@@ -18,8 +20,9 @@ void createplayerbullet(vector<bullet>& b1, player& p)
 	temp.posY = temp.rect.y;
 	temp.rect.w = 20;
 	temp.rect.h = 20;
-	temp.speed = 20.0;
+	temp.speed = 25.0;
 	b1.push_back(temp);
+
 }
 void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e, player& p)
 {
@@ -35,7 +38,7 @@ void createenemiesbullet(vector<bullet>& b2, vector<enemy>& e, player& p)
 			tmp.posY = tmp.rect.y;
 			tmp.rect.w = 10;
 			tmp.rect.h = 10;
-			tmp.speed = 15.0;
+			tmp.speed = 20.0;
 			if (p.score >= 1000)
 			{
 				tmp.speed = 30.0;
@@ -109,36 +112,56 @@ void updatenuclearbomb(vector<bullet>& b3)
 		}
 	}
 }
-void rendernuclearbomb(vector<bullet>&b3,SDL_Renderer*renderer)
+void rendernuclearbomb(vector<bullet>&b3,SDL_Renderer*renderer,SDL_Texture*nuclearbombTexture)
 {
 	int n = b3.size();
 	for (int i = 0;i <n;i++)
 	{
-		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 0);
-		SDL_RenderFillRect(renderer, &b3[i].rect);
+		SDL_RenderCopy(renderer, nuclearbombTexture, nullptr, &b3[i].rect);
 	}
 }
-void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e,player&p,vector<bullet>&b2,SDL_Renderer*renderer)
+
+void nuclearbombexplode(vector<bullet>& b3, vector<enemy>& e, player& p, vector<bullet>& b2, SDL_Renderer* renderer,Mix_Chunk*bombSound)
 {
-	for (int i = b3.size()-1;i >= 0;i--)
+	SDL_Texture* explodeFrames[5];
+	explodeFrames[0] = IMG_LoadTexture(renderer, "asset/explode1.png");
+	explodeFrames[1] = IMG_LoadTexture(renderer, "asset/explode2.png");
+	explodeFrames[2] = IMG_LoadTexture(renderer, "asset/explode3.png");
+	explodeFrames[3] = IMG_LoadTexture(renderer, "asset/explode4.png");
+	explodeFrames[4] = IMG_LoadTexture(renderer, "asset/explode5.png");
+
+	for (int i = b3.size() - 1; i >= 0; i--)
 	{
 		if (b3[i].rect.y <= 100)
 		{
 			b3.erase(b3.begin() + i);
+
+			
 			e.clear();
 			b2.clear();
 			p.score += 100;
-			SDL_Rect fullScreenRect = { 0, 0, 800, 600 };
+			Mix_PlayChannel(-1, bombSound, 0);
+			SDL_Rect fullScreenRect = { 0, 0, 800, 600};
 
-			SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128); 
-			SDL_RenderFillRect(renderer, &fullScreenRect);
+			for (int frame = 0; frame < 5; frame++)
+			{
 
-			
-			SDL_Delay(100);
+				SDL_RenderCopy(renderer, explodeFrames[frame], NULL, &fullScreenRect);
+				SDL_RenderPresent(renderer);
+				SDL_Delay(100);
+			}
+			break;
 		}
 	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		SDL_DestroyTexture(explodeFrames[i]);
+	}
 }
-void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&cb,SDL_Renderer*renderer)
+
+
+void checkcollision1(vector<bullet>& b1, vector<enemy>& e, player& p, vector<combo>& cb, SDL_Renderer* renderer)
 {
 	SDL_Texture* explosion1 = IMG_LoadTexture(renderer, "asset/explosion1.png");
 	SDL_Texture* explosion2 = IMG_LoadTexture(renderer, "asset/explosion2.png");
@@ -183,6 +206,8 @@ void checkcollision1(vector<bullet>& b1, vector<enemy>&e,player&p,vector<combo>&
 	SDL_DestroyTexture(explosion2);
 	SDL_DestroyTexture(explosion3);
 }
+
+
 void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP,vector<combo>&cb)
 {
 	for (int i =b2.size()-1;i>=0;i--)
@@ -197,13 +222,14 @@ void checkcollision2(vector<bullet>& b2, player& p,vector<hp>&HP,vector<combo>&c
 	}
 }
 
-void checkcolisionboss(vector<bullet>& b1, Boss& boss)
+void checkcolisionboss(vector<bullet>& b1, Boss& boss,vector<hp>&HPboss)
 {
 	for (int i = b1.size()-1;i >= 0;i--)
 	{
 		if (SDL_HasIntersection(&b1[i].rect, &boss.rect))
 		{
-			boss.health -= 100;
+			boss.health -= 200;
+			updateHPboss(HPboss);
 			cout << boss.health << endl;
 			b1.erase(b1.begin() + i);
 			break;

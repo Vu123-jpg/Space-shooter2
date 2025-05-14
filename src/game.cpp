@@ -8,11 +8,16 @@
 #include"bullets.h"
 #include"Boss.h"
 #include"barHP.h"
+#include<fstream>
+#include<SDL_mixer.h>
 using namespace std;
 Animation victoryAnim;
 vector<SDL_Texture*> winFrames;
 bool victoryStarted = false;
 int backgroundY = 0; 
+Uint8* audioBuffer;
+Uint32 audioLength;
+
 void startgame(SDL_Renderer* renderer, bool& gamestart)
 {
 	bool menugame = false;
@@ -124,7 +129,7 @@ void renderscore(SDL_Renderer* renderer,TTF_Font*font, player& p) {
 
 
 void renderBackground(SDL_Renderer* renderer, SDL_Texture* backgroundTexture) {
-	backgroundY += 2;
+	backgroundY += 1;
 	if (backgroundY >= 600)
 		backgroundY = 0;
 
@@ -135,11 +140,11 @@ void renderBackground(SDL_Renderer* renderer, SDL_Texture* backgroundTexture) {
 	SDL_RenderCopy(renderer, backgroundTexture, NULL, &bg2);
 }
 
-// Tải ảnh vào một lần duy nhất
+
 void loadVictoryAnim(SDL_Renderer* renderer) {
-	for (int i = 0; i <= 20; ++i) {
+	for (int i = 0; i <74; ++i) {
 		char filename[64];
-		sprintf_s(filename, sizeof(filename), "asset/win_e_%02d.png", i);
+		sprintf_s(filename, "asset/win_e_%02d.png", i);
 		SDL_Texture* frame = IMG_LoadTexture(renderer, filename);
 		victoryAnim.addFrame(frame);
 	}
@@ -151,13 +156,9 @@ void renderWingame(SDL_Renderer* renderer)
 {
 	
 	victoryAnim.update();
-
-
 	SDL_Texture* currentFrame = victoryAnim.getCurrentFrame();
 	if (currentFrame) {
-
 		SDL_Rect dst = { 0,0,800,600 };
-	
 		SDL_RenderCopy(renderer, currentFrame, nullptr, &dst);
 	}
 }
